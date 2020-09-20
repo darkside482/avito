@@ -1,0 +1,62 @@
+version: '3.5'
+
+services:
+    redis:
+        image: redis:3.0.6
+        volumes:
+            - ./docker/redis:/data
+        ports:
+            - "6379:6379"
+        
+    rabbitmq:
+        image: rabbitmq:3.7.3-management
+        volumes:
+            - rabbitmq:/var/lib/rabbitmq
+        hostname: rabbitmq
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+            - "25672:25672"
+
+    postgres:
+        image: postgres:9.6
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        environment:
+            - POSTGRES_USER=darkside
+            - POSTGRES_PASSWORD=iceking987056
+            - POSTGRES_DB=project
+
+    mongo:
+        image: mongo:3.6.5
+        volumes:
+            - mongodb:/data/db
+        ports:
+            - "27017:27017"
+
+    php_fpm:
+        build: ./docker-container/php-fpm
+        container_name: hezzl_php
+        volumes:
+            - ./:/var/www
+        environment:
+            - XDEBUG_HOST=host.docker.internal
+            - XDEBUG_PORT=9000
+            - PHP_IDE_CONFIG=serverName=127.0.0.1
+
+    nginx:
+        build: ./docker-container/nginx
+        ports:
+            - "8000:80"
+        volumes:
+            - ../Hezzl:/var/www
+
+volumes:
+    pgdata:
+        driver: local
+    mongodb:
+        driver: local
+    rabbitmq:
+        driver: local
