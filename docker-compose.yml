@@ -25,20 +25,13 @@ services:
         ports:
             - "5432:5432"
         environment:
-            - POSTGRES_USER=darkside
-            - POSTGRES_PASSWORD=iceking987056
-            - POSTGRES_DB=project
-
-    mongo:
-        image: mongo:3.6.5
-        volumes:
-            - mongodb:/data/db
-        ports:
-            - "27017:27017"
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=postgres
 
     php_fpm:
         build: ./docker-container/php-fpm
-        container_name: hezzl_php
+        container_name: avito_php
         volumes:
             - ./:/var/www
         environment:
@@ -55,8 +48,6 @@ services:
 
 volumes:
     pgdata:
-        driver: local
-    mongodb:
         driver: local
     rabbitmq:
         driver: local
